@@ -93,7 +93,7 @@ search_space = [{'clf': [LogisticRegression(random_state=SEED)],
                 {'clf': [LGBMClassifier(random_state=SEED)],
                  'scl__k': [50, 100, 150, 200],
                  'clf__num_leaves': list(range(8, 92, 4)),
-                 'clf__min_data_in_leaf': [10, 20, 40, 60, 100],
+                 'clf__min_child_samples': [10, 20, 40, 60, 100],
                  'clf__max_depth': range(3, 30, 2),
                  'clf__learning_rate': [0.001, 0.01, 0.1, 0.2, 0.3],
                  'clf__bagging_freq': [3, 4, 5, 6, 7],
@@ -111,7 +111,7 @@ search_space = [{'clf': [LogisticRegression(random_state=SEED)],
 
 gs = RandomizedSearchCV(estimator=pipe,
                         param_distributions=search_space,
-                        scoring='accuracy',
+                        scoring='roc_auc',
                         cv=K_FOLD,
                         n_jobs=JOBS,
                         verbose=1,
@@ -146,6 +146,8 @@ print('\nROC_auc_score: {}'.format(roc_auc_score(y_test, y_pred)))
 
 print('\nExportando resultados')
 with pd.ExcelWriter(r'results\resultados_santander_random.xlsx') as writer:
+    cv_result.to_excel(writer, sheet_name='CV_Resultado', index=False)
+    features_sel.to_excel(writer, sheet_name='Features_Seleccionadas', index=False)
     conf_mat.to_excel(writer, sheet_name='Matriz_Confusion')
     class_rep.to_excel(writer, sheet_name='Reporte_Clasificacion')
 
