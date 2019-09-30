@@ -1,8 +1,9 @@
 import pandas as pd
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline, make_union
+from tpot.builtins import StackingEstimator
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
 import joblib
@@ -58,10 +59,10 @@ print('\nPreparando pipeline')
 
 y_train = y_train['target'].ravel()  # array con el target
 
-# Average CV score on the training set was:0.8865192171711967
+# Average CV score on the training set was:0.8867135234546322
 exported_pipeline = make_pipeline(
-    StandardScaler(),
-    GaussianNB()
+    StackingEstimator(estimator=GaussianNB()),
+    ExtraTreesClassifier(bootstrap=True, criterion="gini", max_features=0.6500000000000001, min_samples_leaf=20, min_samples_split=19, n_estimators=100)
 )
 
 exported_pipeline.fit(X_train, y_train)
