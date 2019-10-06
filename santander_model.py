@@ -66,6 +66,10 @@ exported_pipeline = make_pipeline(
 )
 
 exported_pipeline.fit(X_train, y_train)
+
+# para probar
+# exported_pipeline = joblib.load('results/santander_model.pkl')
+
 y_pred = exported_pipeline.predict(X_test)
 
 # métricas para exportar
